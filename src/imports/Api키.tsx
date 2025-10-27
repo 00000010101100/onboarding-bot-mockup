@@ -1714,7 +1714,7 @@ function FloatingButton() {
       console.log('📨 Received message:', event.data, 'from origin:', event.origin);
       
       // 보안을 위해 origin 확인
-      if (event.origin !== 'http://localhost:5173') return;
+      if (event.origin !== 'https://staix-onboarding-bot.vercel.app') return;
       
       // 다양한 메시지 형식 처리
       if (event.data) {
@@ -1824,12 +1824,12 @@ function FloatingButton() {
           className={`iframe-modal ${isMaximized ? 'maximized' : 'minimized'}`}
           onClick={(e) => e.stopPropagation()}
         >
-          <iframe
-            src="http://localhost:5173/"
-            className="iframe-content"
-            title="Local Development Server"
-            allowFullScreen
-            scrolling="no"
+            <iframe
+              src="https://staix-onboarding-bot.vercel.app/"
+              className="iframe-content"
+              title="Staix Onboarding Bot"
+              allowFullScreen
+              scrolling="no"
             onLoad={() => {
               console.log('🚀 iframe loaded, sending initial message');
               // iframe 로드 후 부모 창에 초기 메시지 전송
