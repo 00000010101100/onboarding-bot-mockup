@@ -1680,18 +1680,20 @@ function FloatingButton() {
   const [isMaximized, setIsMaximized] = useState(false);
 
   const handleClick = () => {
-    if (!isModalOpen) {
-      // 모달을 열 때 강제로 minimized 상태로 리셋
-      setIsMaximized(false);
-      console.log('🔄 Opening modal, forcing minimized state');
-    }
+    // 모달 상태만 토글, 사이즈는 유지
     setIsModalOpen(!isModalOpen);
+    console.log('🔄 Modal toggled, maintaining size state:', isMaximized ? 'maximized' : 'minimized');
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setIsMaximized(false); // 모달 닫을 때 상태 초기화
-    console.log('🔄 Modal closed, state reset to minimized');
+    console.log('🔄 Modal closed, maintaining size state:', isMaximized ? 'maximized' : 'minimized');
+  };
+
+  const closeModalAndReset = () => {
+    setIsModalOpen(false);
+    setIsMaximized(false); // 채팅 봇에서 닫을 때만 사이즈 초기화
+    console.log('🔄 Modal closed by chat bot, resetting to minimized');
   };
 
   // 모달이 열릴 때 클래스 강제 적용
@@ -1719,14 +1721,14 @@ function FloatingButton() {
       // 다양한 메시지 형식 처리
       if (event.data) {
         // 모달 닫기 처리
-        if (event.data === 'chat-close' || 
-            (event.data.type === 'chat-close') ||
-            (typeof event.data === 'string' && event.data.includes('chat-close'))) {
-          console.log('❌ Chat close message received:', event.data);
-          console.log('🚪 Closing modal...');
-          closeModal();
-          return;
-        }
+               if (event.data === 'chat-close' || 
+                   (event.data.type === 'chat-close') ||
+                   (typeof event.data === 'string' && event.data.includes('chat-close'))) {
+                 console.log('❌ Chat close message received:', event.data);
+                 console.log('🚪 Closing modal and resetting size...');
+                 closeModalAndReset();
+                 return;
+               }
         
         // chat-height-change 메시지 처리
         if (event.data === 'chat-height-change' || 
