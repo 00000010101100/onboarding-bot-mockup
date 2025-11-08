@@ -260,22 +260,63 @@ html {
     animation: modalFadeIn 0.3s ease-out; /* fade in 효과로 변경 */
     position: relative;
     pointer-events: auto;
-    transition: all 0.3s ease;
+    transition: width 0.3s ease-out, height 0.3s ease-out;
     margin: 0; /* 마진 제거 */
     padding: 0; /* 패딩 제거 */
     box-sizing: border-box; /* 박스 모델 통일 */
+    transform-origin: right center !important; /* 우측 기준으로 크기 변경 */
+    height: 720px; /* 기본 높이 설정 */
+    min-height: 720px; /* 최소 높이 설정 */
   }
 
   /* Minimize 모드: 너비만 고정, 높이는 동적 */
   .iframe-modal.minimized {
     width: 400px;
-    height: auto; /* 높이를 동적으로 설정 가능하도록 변경 */
+    height: 720px; /* 기본 높이 */
+    min-height: 720px; /* 최소 높이 */
   }
 
   /* Maximize 모드: 너비만 고정, 높이는 동적 */
   .iframe-modal.maximized {
     width: 680px;
-    height: auto; /* 높이를 동적으로 설정 가능하도록 변경 */
+    height: 720px; /* 기본 높이 */
+    min-height: 720px; /* 최소 높이 */
+  }
+
+  /* 모달 컨트롤 버튼 영역 */
+  .modal-controls {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 4px;
+  }
+
+  /* 사이즈 토글 버튼 */
+  .modal-size-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #333;
+    box-shadow: none;
+  }
+
+  .modal-size-button:hover {
+    background-color: #f5f5f5;
+    box-shadow: none;
+    transform: scale(1.05);
+  }
+
+  .modal-size-button:active {
+    transform: scale(0.95);
   }
 
   .iframe-content {

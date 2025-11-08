@@ -1696,6 +1696,12 @@ function FloatingButton() {
     console.log('🔄 Modal closed by chat bot, resetting to minimized');
   };
 
+  // 사이즈 토글 핸들러
+  const handleSizeToggle = () => {
+    setIsMaximized((prev) => !prev);
+    console.log('🔄 Size toggled:', !isMaximized ? 'maximized' : 'minimized');
+  };
+
   // 모달이 열릴 때 클래스 강제 적용
   useEffect(() => {
     if (isModalOpen) {
@@ -1716,7 +1722,7 @@ function FloatingButton() {
       console.log('📨 Received message:', event.data, 'from origin:', event.origin);
       
       // 보안을 위해 origin 확인
-      if (event.origin !== 'https://staix-onboarding-bot.vercel.app') return;
+      if (event.origin !== 'https://asas-theta.vercel.app') return;
       
       // 다양한 메시지 형식 처리
       if (event.data) {
@@ -1826,8 +1832,26 @@ function FloatingButton() {
           className={`iframe-modal ${isMaximized ? 'maximized' : 'minimized'}`}
           onClick={(e) => e.stopPropagation()}
         >
+          {/* 사이즈 토글 버튼 */}
+          <div className="modal-controls">
+            <button
+              className="modal-size-button"
+              onClick={handleSizeToggle}
+              title={isMaximized ? 'Minimize' : 'Maximize'}
+            >
+              {isMaximized ? (
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.1853 11.2966H11.2965M11.2965 11.2966V15.1855M11.2965 11.2966L15.8335 15.8337M4.81498 8.70403H8.70387M8.70387 8.70403V4.81514M8.70387 8.70403L4.16683 4.16699" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.70387 8.70403L4.16683 4.16699M4.16683 4.16699H8.05572M4.16683 4.16699V8.05588M11.2965 11.2966L15.8335 15.8337M15.8335 15.8337H11.9446M15.8335 15.8337L15.8335 11.9448" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </button>
+          </div>
             <iframe
-              src="https://staix-onboarding-bot.vercel.app/"
+              src="https://asas-theta.vercel.app/"
               className="iframe-content"
               title="Staix Onboarding Bot"
               allowFullScreen
