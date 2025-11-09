@@ -1877,14 +1877,16 @@ function FloatingButton() {
                   const iframe = document.querySelector('.iframe-content') as HTMLIFrameElement;
                   if (iframe && iframe.contentWindow) {
                     // targetOrigin을 명시적으로 설정
+                    const proxyUrl = `${window.location.origin}/api/proxy`;
                     iframe.contentWindow.postMessage(
                       { 
                         type: 'parentReady',
-                        parentOrigin: window.location.origin
+                        parentOrigin: window.location.origin,
+                        proxyUrl: proxyUrl // 프록시 URL 전달
                       },
                       'https://onboardingbot-v2.vercel.app'
                     );
-                    console.log('✅ Sent parentReady message to iframe');
+                    console.log('✅ Sent parentReady message to iframe with proxy URL:', proxyUrl);
                     
                     // iframe 내부 접근 시도 (디버깅용)
                     setTimeout(() => {
