@@ -1721,8 +1721,21 @@ function FloatingButton() {
     const handleMessage = (event: MessageEvent) => {
       console.log('📨 Received message:', event.data, 'from origin:', event.origin);
       
-      // 보안을 위해 origin 확인
-      if (event.origin !== 'https://asas-theta.vercel.app') return;
+      // 보안을 위해 origin 확인 (더 유연하게 처리)
+      const allowedOrigins = [
+        'https://onboardingbot-v2.vercel.app',
+        'http://localhost',
+        window.location.origin
+      ];
+      
+      const isAllowedOrigin = allowedOrigins.some(origin => 
+        event.origin.startsWith(origin) || event.origin === origin
+      );
+      
+      if (!isAllowedOrigin) {
+        console.log('⚠️ Message from disallowed origin:', event.origin);
+        return;
+      }
       
       // 다양한 메시지 형식 처리
       if (event.data) {
@@ -1851,24 +1864,51 @@ function FloatingButton() {
             </button>
           </div>
             <iframe
-              src="https://asas-theta.vercel.app/"
+              src="https://onboardingbot-v2.vercel.app/"
               className="iframe-content"
               title="Staix Onboarding Bot"
               allowFullScreen
               scrolling="no"
-            onLoad={() => {
-              console.log('🚀 iframe loaded, sending initial message');
-              // iframe 로드 후 부모 창에 초기 메시지 전송
-              try {
-                const iframe = document.querySelector('.iframe-content') as HTMLIFrameElement;
-                if (iframe && iframe.contentWindow) {
-                  iframe.contentWindow.postMessage({ type: 'parentReady' }, '*');
+              allow="microphone; camera; geolocation; payment; autoplay; clipboard-read; clipboard-write"
+              onLoad={() => {
+                console.log('🚀 iframe loaded, sending initial message');
+                // iframe 로드 후 부모 창에 초기 메시지 전송
+                try {
+                  const iframe = document.querySelector('.iframe-content') as HTMLIFrameElement;
+                  if (iframe && iframe.contentWindow) {
+                    // targetOrigin을 명시적으로 설정
+                    iframe.contentWindow.postMessage(
+                      { 
+                        type: 'parentReady',
+                        parentOrigin: window.location.origin
+                      },
+                      'https://onboardingbot-v2.vercel.app'
+                    );
+                    console.log('✅ Sent parentReady message to iframe');
+                    
+                    // iframe 내부 접근 시도 (디버깅용)
+                    setTimeout(() => {
+                      try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                        if (iframeDoc) {
+                          console.log('✅ Can access iframe document');
+                          console.log('📄 Iframe URL:', iframeDoc.URL);
+                        } else {
+                          console.log('⚠️ Cannot access iframe document (CORS restriction)');
+                        }
+                      } catch (error) {
+                        console.log('⚠️ Cannot access iframe document:', error);
+                      }
+                    }, 1000);
+                  }
+                } catch (error) {
+                  console.log('⚠️ Could not send initial message to iframe:', error);
                 }
-              } catch (error) {
-                console.log('⚠️ Could not send initial message to iframe:', error);
-              }
-            }}
-          />
+              }}
+              onError={(e) => {
+                console.error('❌ iframe load error:', e);
+              }}
+            />
         </div>
       </div>
     </>
